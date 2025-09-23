@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 @Service
 public class EntregadorService {
 
@@ -17,6 +19,17 @@ public class EntregadorService {
        entregador.setHabilitado(Boolean.TRUE);
        return repository.save(entregador); //cadastra no banco
    }
+//listagem controller:
+    public List<Entregador> listarTodos() {
+  
+        return repository.findAll(); //SELECT * FROM Entregador
+    }
 
+    public Entregador obterPorID(Long id) {
+
+        return repository.findById(id).get(); //SELECT * FROM Entregador Where id = ? 
+    }
+
+    
     
 }

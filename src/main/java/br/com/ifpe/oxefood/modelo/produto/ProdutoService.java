@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 @Service
 public class ProdutoService {
 
@@ -18,5 +20,15 @@ public class ProdutoService {
        return repository.save(produto); //cadastra no banco
    }
 
-    
+    //listagem controller:
+    public List<Produto> listarTodos() {
+  
+        return repository.findAll(); //SELECT * FROM Produto
+    }
+
+    public Produto obterPorID(Long id) {
+
+        return repository.findById(id).get(); //SELECT * FROM Produto Where id = ? 
+    }
+
 }
