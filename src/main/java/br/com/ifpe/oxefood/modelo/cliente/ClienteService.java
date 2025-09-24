@@ -30,6 +30,24 @@ public class ClienteService {
 
         return repository.findById(id).get(); //SELECT * FROM Ciente Where id = ? 
     }
+//update:
+//a partir do id q recebeu, consulta o cliente no banco e altera 
+  @Transactional
+   public void update(Long id, Cliente clienteAlterado) {
+
+      Cliente cliente = repository.findById(id).get();
+      cliente.setNome(clienteAlterado.getNome());
+      cliente.setDataNascimento(clienteAlterado.getDataNascimento());
+      cliente.setCpf(clienteAlterado.getCpf());
+      cliente.setFoneCelular(clienteAlterado.getFoneCelular());
+      cliente.setFoneFixo(clienteAlterado.getFoneFixo());
+	  
+      //sem id: update
+     //com id:insert
+      repository.save(cliente);
+  }
+  
+
 
     
 }

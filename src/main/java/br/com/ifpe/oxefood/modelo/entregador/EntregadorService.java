@@ -1,11 +1,11 @@
 package br.com.ifpe.oxefood.modelo.entregador;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-
-import java.util.List;
 
 @Service
 public class EntregadorService {
@@ -30,6 +30,33 @@ public class EntregadorService {
         return repository.findById(id).get(); //SELECT * FROM Entregador Where id = ? 
     }
 
-    
+    //update:
+//a partir do id q recebeu, consulta o cliente no banco e altera 
+  @Transactional
+   public void update(Long id, Entregador entregadorAlterado) {
+
+      Entregador entregador = repository.findById(id).get();
+      entregador.setNome(entregadorAlterado.getNome());
+      entregador.setCpf(entregadorAlterado.getCpf());
+      entregador.setRg(entregadorAlterado.getRg());
+      entregador.setDataNascimento(entregadorAlterado.getDataNascimento());
+      entregador.setCpf(entregadorAlterado.getCpf());
+      entregador.setFoneCelular(entregadorAlterado.getFoneCelular());
+      entregador.setFoneFixo(entregadorAlterado.getFoneFixo());
+	  entregador.setQtdEntregasRealizadas(entregadorAlterado.getQtdEntregasRealizadas());
+      entregador.setEnderecoRua(entregadorAlterado.getEnderecoRua());
+      entregador.setEnderecoComplemento(entregadorAlterado.getEnderecoComplemento());
+      entregador.setEnderecoNumero(entregadorAlterado.getEnderecoNumero());
+      entregador.setEnderecoBairro(entregadorAlterado.getEnderecoBairro());
+      entregador.setEnderecoCidade(entregadorAlterado.getEnderecoCidade());
+      entregador.setEnderecoCep(entregadorAlterado.getEnderecoCep());
+      entregador.setEnderecoUf(entregadorAlterado.getEnderecoUf());
+      entregador.setAtivo(entregadorAlterado.getAtivo());
+      //sem id: update
+     //com id:insert
+      repository.save(entregador);
+  }
+  
+
     
 }

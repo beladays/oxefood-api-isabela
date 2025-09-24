@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +46,15 @@ public class ClienteController {
     public Cliente obterPorID(@PathVariable Long id) {
         return clienteService.obterPorID(id);
     }
+
+//update:
+//(rota de alterar) passa tbm um json com os dados do cliente alterado
+@PutMapping("/{id}")
+ public ResponseEntity<Cliente> update(@PathVariable("id") Long id, @RequestBody ClienteRequest request) {
+
+       clienteService.update(id, request.build());
+       return ResponseEntity.ok().build();
+ }
 
 
     
