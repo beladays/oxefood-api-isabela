@@ -37,7 +37,7 @@ public class EntregadorController {
        return new ResponseEntity<Entregador>(entregador, HttpStatus.CREATED);
    }
 
-   //listagem:
+   //listagem
     @GetMapping 
     public List<Entregador> listarTodos() {
         return entregadorService.listarTodos();
