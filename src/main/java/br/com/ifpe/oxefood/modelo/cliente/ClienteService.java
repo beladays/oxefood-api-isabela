@@ -47,6 +47,19 @@ public class ClienteService {
       repository.save(cliente);
   }
   
+  //delete:
+  //remoção lógica
+  //sethabilitado: pra ver se está vivo ou não 
+  //save = inclui(sem id) ou altera(com id)
+  @Transactional
+   public void delete(Long id) {
+
+       Cliente cliente = repository.findById(id).get();
+       cliente.setHabilitado(Boolean.FALSE);
+
+       repository.save(cliente);
+   }
+
 
 
     

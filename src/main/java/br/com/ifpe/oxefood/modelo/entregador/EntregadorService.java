@@ -57,6 +57,20 @@ public class EntregadorService {
       repository.save(entregador);
   }
   
+//delete:
+  //remoção lógica
+  //sethabilitado: pra ver se está vivo ou não 
+  //save = inclui(sem id) ou altera(com id)
+  @Transactional
+   public void delete(Long id) {
+
+       Entregador entregador = repository.findById(id).get();
+       entregador.setHabilitado(Boolean.FALSE);
+
+       repository.save(entregador);
+   }
+
+
 
     
 }
