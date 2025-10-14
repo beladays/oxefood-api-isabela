@@ -1,6 +1,6 @@
 //especificar atributos e tabela cliente, classe estrutura
 package br.com.ifpe.oxefood.modelo.cliente;
-
+ 
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,8 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-//anotações do JPA:
+ 
+//anotações do JPA (serve p mapear atributos no banco):
 @Entity //classifica a classe como entidade
 @Table(name = "Cliente") //determinar q sera criado uma tabela com esse nome
 @SQLRestriction("habilitado = true") //serve pra acresentar uma clausula de filtro, e pode fazer uma exclusão lógica
@@ -35,13 +35,14 @@ public class Cliente extends EntidadeAuditavel  {
    private List<EnderecoCliente> enderecos;
 
   
-   @Column
+   @Column (nullable = false, length = 100) //acresenta no BANCO uma validação (if) 
+   //tem q informar o nome e max 100
    private String nome;
 
    @Column
    private LocalDate dataNascimento;
 
-   @Column
+   @Column (unique = true) //n permite q tenha 2 clientes nesse banco com o mesmo cpf
    private String cpf;
 
    @Column

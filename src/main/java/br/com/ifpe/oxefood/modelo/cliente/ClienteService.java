@@ -13,7 +13,7 @@ public class ClienteService {
 
    @Autowired //injetar automaticamente uma dependencia no atributo se precisar
    private ClienteRepository repository;
-
+ 
     @Autowired //injetar automaticamente uma dependencia no atributo se precisar
    private EnderecoClienteRepository enderecoClienteRepository;
 
@@ -23,7 +23,7 @@ public class ClienteService {
        cliente.setHabilitado(Boolean.TRUE);
        return repository.save(cliente); //cadastra no banco
    }
-
+ 
 //listagem controller:
     public List<Cliente> listarTodos() {
   
@@ -63,6 +63,10 @@ public class ClienteService {
 
        repository.save(cliente);
    }
+
+
+//Endereço:
+
 //cadastrar endereço:
 @Transactional
    public EnderecoCliente adicionarEnderecoCliente(Long clienteId, EnderecoCliente endereco) {
@@ -89,7 +93,7 @@ public class ClienteService {
       
        return endereco;
    }
-
+ 
 //atualizar endereço:
 @Transactional
    public EnderecoCliente atualizarEnderecoCliente(Long id, EnderecoCliente enderecoAlterado) {
