@@ -27,7 +27,7 @@ import lombok.Setter;
 
 public class Entregador extends EntidadeAuditavel  {
   
-   @Column
+   @Column (nullable = false)
    private String nome;
 
    @Column
@@ -51,7 +51,7 @@ public class Entregador extends EntidadeAuditavel  {
    @Column
    private Double valorFrete;
 
-   @Column
+   @Column (nullable = false)
    private String enderecoRua;
 
    @Column
@@ -60,7 +60,7 @@ public class Entregador extends EntidadeAuditavel  {
    @Column
    private String enderecoNumero;
 
-   @Column
+   @Column (nullable = false)
    private String enderecoBairro;
 
    @Column

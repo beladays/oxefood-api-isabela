@@ -33,16 +33,15 @@ public class Produto extends EntidadeAuditavel  {
    @ManyToOne
    private CategoriaProduto categoria;
 
-   @Column
+   @Column (nullable = false)
    private String codigo;
 
-   @Column
+   @Column (nullable = false)
    private String titulo;
 
    @Column
    private String descricao;
 
-   @Column
    private Double valorUnitario;
 
    @Column

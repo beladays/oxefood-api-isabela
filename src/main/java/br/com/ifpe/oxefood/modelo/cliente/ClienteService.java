@@ -3,6 +3,9 @@ package br.com.ifpe.oxefood.modelo.cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
+import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
+import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
@@ -10,6 +13,12 @@ import java.util.List;
 
 @Service
 public class ClienteService {
+   @Autowired
+   private UsuarioService usuarioService;
+
+   @Autowired
+   private PerfilRepository perfilUsuarioRepository;
+
 
    @Autowired //injetar automaticamente uma dependencia no atributo se precisar
    private ClienteRepository repository;
@@ -19,6 +28,12 @@ public class ClienteService {
 
    @Transactional //criar um bloco transacional, ou vai executar tudo ou não executa nada
    public Cliente save(Cliente cliente) {
+    usuarioService.save(cliente.getUsuario());
+
+      for (Perfil perfil : cliente.getUsuario().getRoles()) {
+           perfil.setHabilitado(Boolean.TRUE);
+           perfilUsuarioRepository.save(perfil);
+      }
 
        cliente.setHabilitado(Boolean.TRUE);
        return repository.save(cliente); //cadastra no banco

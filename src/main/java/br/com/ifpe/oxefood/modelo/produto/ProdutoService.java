@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -15,7 +16,14 @@ public class ProdutoService {
 
    @Transactional //criar um bloco transacional, ou vai executar tudo ou não executa nada
    public Produto save(Produto produto) {
-
+    //excessão:
+   if (produto.getValorUnitario() < 20 ) {
+	    throw new ProdutoException(ProdutoException.MSG_VALOR_MINIMO_PRODUTO);
+	}
+    if (produto.getValorUnitario() > 100 ) {
+	    throw new ProdutoException(ProdutoException.MSG_VALOR_MINIMO_PRODUTO);
+	}
+    //
        produto.setHabilitado(Boolean.TRUE);
        return repository.save(produto); //cadastra no banco
    }
