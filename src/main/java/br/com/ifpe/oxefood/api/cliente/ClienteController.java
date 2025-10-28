@@ -33,12 +33,16 @@ public class ClienteController {
    @Autowired //
    private ClienteService clienteService;
 
-   @PostMapping
-   public ResponseEntity<Cliente> save(@RequestBody @Valid ClienteRequest request) {
-//RequestBody = o json vai vir no body da requisição
-       Cliente cliente = clienteService.save(request.build());
-       return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
-   }
+   @Autowired
+    private UsuarioService usuarioService;
+
+  @PostMapping
+    public ResponseEntity<Cliente> save(@RequestBody @Valid ClienteRequest clienteRequest, HttpServletRequest request) {
+
+        Cliente cliente = clienteService.save(clienteRequest.build(), usuarioService.obterUsuarioLogado(request));
+        return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
+    }
+   //RequestBody = o json vai vir no body da requisição
     
 //listagem:
     @GetMapping 
@@ -54,11 +58,12 @@ public class ClienteController {
 //update:
 //(rota de alterar) passa tbm um json com os dados do cliente alterado
 @PutMapping("/{id}")
- public ResponseEntity<Cliente> update(@PathVariable("id") Long id, @RequestBody @Valid ClienteRequest request) {
+    public ResponseEntity<Cliente> update(@PathVariable("id") Long id, @RequestBody ClienteRequest clienteRequest, HttpServletRequest request) {
 
-       clienteService.update(id, request.build());
-       return ResponseEntity.ok().build();
- }
+	    clienteService.update(id, clienteRequest.build(), usuarioService.obterUsuarioLogado(request)));
+	    return ResponseEntity.ok().build();
+    }
+
 //delete:
 //pra ser invocado precisa fazer uma requisição tipo delete, passando o id na url
  //não vai retornar nenhum objeto(void)

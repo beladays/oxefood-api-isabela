@@ -17,11 +17,30 @@ import jakarta.transaction.Transactional;
 public class UsuarioService implements UserDetailsService {
 
     @Autowired
+    private JwtService jwtService;
+
+    @Autowired
     private UsuarioRepository repository;
 
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+
+    public Usuario obterUsuarioLogado(HttpServletRequest request) {
+
+        Usuario usuarioLogado = null;
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null) {
+
+            String jwt = authHeader.substring(7);
+            String userEmail = jwtService.extractUsername(jwt);
+            usuarioLogado = findByUsername(userEmail);
+            return usuarioLogado;
+        }
+
+        return usuarioLogado;
+    }
 
     public UsuarioService(UsuarioRepository userRepository, AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder) {

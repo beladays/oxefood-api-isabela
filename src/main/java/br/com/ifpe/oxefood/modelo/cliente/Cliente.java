@@ -46,6 +46,9 @@ public class Cliente extends EntidadeAuditavel  {
     @Fetch(FetchMode.SUBSELECT)
    private List<EnderecoCliente> enderecos;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Usuario usuario;
   
    @Column (nullable = false, length = 100) //acresenta no BANCO uma validação (if) 
    //tem q informar o nome e max 100

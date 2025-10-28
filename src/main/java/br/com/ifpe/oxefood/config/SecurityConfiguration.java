@@ -34,7 +34,10 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+    //libera rotas
+    public SecurityFilterChain securityFilterChain
+    (HttpSecurity http) throws Exception {
 
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -42,8 +45,29 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authorize -> authorize
 
  //quais rotas do projeto estão públicas
+ //permit all n restringe perfil expecifico
+ //hasanyauthority = diz os perfis q vao ter acessso
                 .requestMatchers(HttpMethod.POST, "/api/cliente").permitAll() //cadastro
                 .requestMatchers(HttpMethod.POST, "/api/auth").permitAll() //login
+                .requestMatchers(HttpMethod.POST, "/api/funcionario").permitAll() //cadsatro de funcionario
+
+                .requestMatchers(HttpMethod.GET, "/api/produto/").hasAnyAuthority(
+                   Perfil.ROLE_CLIENTE, //, =ou
+                   Perfil.ROLE_FUNCIONARIO_ADMIN,
+                   Perfil.ROLE_FUNCIONARIO_USER) //Consulta de produto
+
+               .requestMatchers(HttpMethod.POST, "/api/produto").hasAnyAuthority(
+                   Perfil.ROLE_FUNCIONARIO_ADMIN,
+                   Perfil.ROLE_FUNCIONARIO_USER) //Cadastro de produto
+
+               .requestMatchers(HttpMethod.PUT, "/api/produto/*").hasAnyAuthority(
+                   Perfil.ROLE_FUNCIONARIO_ADMIN,
+                   Perfil.ROLE_FUNCIONARIO_USER) //Alteração de produto
+                  
+               .requestMatchers(HttpMethod.DELETE, "/api/produto/*").hasAnyAuthority(
+                   Perfil.ROLE_FUNCIONARIO_ADMIN) //Exclusão de produto
+
+
                 
                 //.requestMatchers(HttpMethod.GET, "/api/produto/*").permitAll() //libera o acesso de ver o produto por id
                 

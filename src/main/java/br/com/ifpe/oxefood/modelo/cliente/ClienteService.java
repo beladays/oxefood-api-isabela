@@ -27,7 +27,7 @@ public class ClienteService {
    private EnderecoClienteRepository enderecoClienteRepository;
 
    @Transactional //criar um bloco transacional, ou vai executar tudo ou não executa nada
-   public Cliente save(Cliente cliente) {
+   public Cliente save(Cliente cliente, Usuario usuarioLogado) {
     usuarioService.save(cliente.getUsuario());
 
       for (Perfil perfil : cliente.getUsuario().getRoles()) {
@@ -36,6 +36,7 @@ public class ClienteService {
       }
 
        cliente.setHabilitado(Boolean.TRUE);
+       cliente.setCriadoPor(usuarioLogado);
        return repository.save(cliente); //cadastra no banco
    }
  
@@ -52,7 +53,7 @@ public class ClienteService {
 //update:
 //a partir do id q recebeu, consulta o cliente no banco e altera 
   @Transactional
-   public void update(Long id, Cliente clienteAlterado) {
+   public void update(Long id, Cliente clienteAlterado, Usuario usuarioLogado) {
 
       Cliente cliente = repository.findById(id).get();
       cliente.setNome(clienteAlterado.getNome());
@@ -61,6 +62,8 @@ public class ClienteService {
       cliente.setFoneCelular(clienteAlterado.getFoneCelular());
       cliente.setFoneFixo(clienteAlterado.getFoneFixo());
 	  
+          cliente.setUltimaModificacaoPor(usuarioLogado);
+
       //sem id: update
      //com id:insert
       repository.save(cliente);
