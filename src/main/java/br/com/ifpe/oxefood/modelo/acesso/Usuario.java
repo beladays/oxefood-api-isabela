@@ -34,48 +34,49 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Usuario extends EntidadeNegocio implements UserDetails {
 
-   @Column(nullable = false, unique = true)
-   private String username;
-   @JsonIgnore
-   @Column(nullable = false)
-   private String password;
+    @Column(nullable = false, unique = true)
+    private String username;
 
-   @JsonIgnore
-   @ElementCollection(fetch = FetchType.EAGER)
-   @Builder.Default
-   private List<Perfil> roles = new ArrayList<>(); // usuario vai poder ter mais de um perfil
+    @JsonIgnore
+    @Column(nullable = false)
+    private String password;
 
-   @Override
-   public Collection<? extends GrantedAuthority> getAuthorities() {
-       return roles;
-   }
+    @JsonIgnore
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<Perfil> roles = new ArrayList<>();
+// usuario vai poder ter mais de um perfil
+  @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
 
-   @Override
-   public String getUsername() {
-       return username;
-   }
+    @Override
+    public String getUsername() {
+        return username;
+    }
 
-   public String getPassword() {
-       return password;
-   }
+    public String getPassword() {
+        return password;
+    }
 
-   @Override
-   public boolean isAccountNonExpired() {
-       return true;
-   }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-   @Override
-   public boolean isAccountNonLocked() {
-       return true;
-   }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-   @Override
-   public boolean isCredentialsNonExpired() {
-       return true;
-   }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-   @Override
-   public boolean isEnabled() {
-       return true;
-   }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

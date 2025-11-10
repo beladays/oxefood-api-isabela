@@ -1,10 +1,12 @@
 //especificar atributos e tabela cliente, classe estrutura
 package br.com.ifpe.oxefood.modelo.cliente;
- 
+
+
 import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.SQLRestriction;
 
 import br.com.ifpe.oxefood.modelo.acesso.Usuario;
@@ -21,8 +23,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
- 
-import org.hibernate.annotations.FetchMode;
 
 //anotações do JPA (serve p mapear atributos no banco):
 @Entity //classifica a classe como entidade
@@ -37,18 +37,14 @@ import org.hibernate.annotations.FetchMode;
 @NoArgsConstructor
 
 public class Cliente extends EntidadeAuditavel  {
-
-   @OneToOne //relaçãod e cliente e usuário (1 cliente poderá ter 1 usuário)
-   @JoinColumn(nullable = false)
-   private Usuario usuario;
-
-   @OneToMany(mappedBy = "cliente", orphanRemoval = true, fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
-   private List<EnderecoCliente> enderecos;
-
-    @ManyToOne
+//relaçãod e cliente e usuário (1 cliente poderá ter 1 usuário)
+   @OneToOne
     @JoinColumn(nullable = false)
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "cliente", orphanRemoval = true, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<EnderecoCliente> enderecos;
   
    @Column (nullable = false, length = 100) //acresenta no BANCO uma validação (if) 
    //tem q informar o nome e max 100

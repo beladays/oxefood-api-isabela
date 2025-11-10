@@ -1,6 +1,8 @@
 //define os endpoints de cliente
 package br.com.ifpe.oxefood.api.cliente;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
+import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import br.com.ifpe.oxefood.modelo.cliente.Cliente;
 import br.com.ifpe.oxefood.modelo.cliente.ClienteService;
 import br.com.ifpe.oxefood.modelo.cliente.EnderecoCliente;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-
-import java.util.List;
-
 
 @RestController //api rest
 @RequestMapping("/api/cliente") //url p acessar funções da classe desse controller
@@ -36,12 +37,13 @@ public class ClienteController {
    @Autowired
     private UsuarioService usuarioService;
 
-  @PostMapping
+    @PostMapping
     public ResponseEntity<Cliente> save(@RequestBody @Valid ClienteRequest clienteRequest, HttpServletRequest request) {
 
         Cliente cliente = clienteService.save(clienteRequest.build(), usuarioService.obterUsuarioLogado(request));
         return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
     }
+
    //RequestBody = o json vai vir no body da requisição
     
 //listagem:
@@ -57,13 +59,13 @@ public class ClienteController {
 
 //update:
 //(rota de alterar) passa tbm um json com os dados do cliente alterado
-@PutMapping("/{id}")
-    public ResponseEntity<Cliente> update(@PathVariable("id") Long id, @RequestBody ClienteRequest clienteRequest, HttpServletRequest request) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> update(@PathVariable("id") Long id, 
+            @RequestBody @Valid ClienteRequest clienteRequest, HttpServletRequest request) {
 
-	    clienteService.update(id, clienteRequest.build(), usuarioService.obterUsuarioLogado(request)));
-	    return ResponseEntity.ok().build();
+        clienteService.update(id, clienteRequest.build(), usuarioService.obterUsuarioLogado(request));
+        return ResponseEntity.ok().build();
     }
-
 //delete:
 //pra ser invocado precisa fazer uma requisição tipo delete, passando o id na url
  //não vai retornar nenhum objeto(void)

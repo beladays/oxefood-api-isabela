@@ -11,7 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +31,7 @@ import lombok.Setter;
 public class Funcionario extends EntidadeAuditavel {
     
 //relacionamento 1 p 1 entre funcionario e usuario
-    @OneToOne
+   @OneToOne
     @JoinColumn(nullable = false)
     private Usuario usuario;
     

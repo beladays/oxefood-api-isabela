@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.ifpe.oxefood.modelo.acesso.Usuario;
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.funcionario.Funcionario;
 import br.com.ifpe.oxefood.modelo.funcionario.FuncionarioService;
 import br.com.ifpe.oxefood.modelo.funcionario.TipoFuncionario;
@@ -34,11 +34,11 @@ public class FuncionarioController {
 
         Funcionario funcionarioNovo = request.build();
 //setar um funcionario q ser cadastrado no banco e poder selecionar se o funcionario é administrador 
-         if (funcionarioNovo.getTipo().equals(TipoFuncionario.ADMINISTRADOR)) {
-                funcionarioNovo.getUsuario().getRoles().add(new Perfil(Perfil.ROLE_FUNCIONARIO_ADMIN));
-           } else if (funcionarioNovo.getTipo().equals(TipoFuncionario.OPERADOR)) {
-                funcionarioNovo.getUsuario().getRoles().add(new Perfil(Perfil.ROLE_FUNCIONARIO_USER));
-           }
+           if (funcionarioNovo.getTipo().equals(TipoFuncionario.ADMINISTRADOR)) {
+            funcionarioNovo.getUsuario().getRoles().add(new Perfil(Perfil.ROLE_FUNCIONARIO_ADMIN));
+        } else if (funcionarioNovo.getTipo().equals(TipoFuncionario.OPERADOR)) {
+            funcionarioNovo.getUsuario().getRoles().add(new Perfil(Perfil.ROLE_FUNCIONARIO_USER));
+        }
 
         Funcionario funcionario = funcionarioService.save(funcionarioNovo);
         return new ResponseEntity<Funcionario>(funcionario, HttpStatus.CREATED);

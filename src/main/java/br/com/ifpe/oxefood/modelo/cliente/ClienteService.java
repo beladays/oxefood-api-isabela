@@ -1,15 +1,16 @@
 package br.com.ifpe.oxefood.modelo.cliente;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
+import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import jakarta.transaction.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ClienteService {
@@ -52,22 +53,24 @@ public class ClienteService {
     }
 //update:
 //a partir do id q recebeu, consulta o cliente no banco e altera 
-  @Transactional
-   public void update(Long id, Cliente clienteAlterado, Usuario usuarioLogado) {
+ @Transactional
+    public void update(Long id, Cliente clienteAlterado, Usuario usuarioLogado) {
 
-      Cliente cliente = repository.findById(id).get();
-      cliente.setNome(clienteAlterado.getNome());
-      cliente.setDataNascimento(clienteAlterado.getDataNascimento());
-      cliente.setCpf(clienteAlterado.getCpf());
-      cliente.setFoneCelular(clienteAlterado.getFoneCelular());
-      cliente.setFoneFixo(clienteAlterado.getFoneFixo());
-	  
-          cliente.setUltimaModificacaoPor(usuarioLogado);
+        Cliente cliente = repository.findById(id).get();
+        cliente.setNome(clienteAlterado.getNome());
+        cliente.setDataNascimento(clienteAlterado.getDataNascimento());
+        cliente.setCpf(clienteAlterado.getCpf());
+        cliente.setFoneCelular(clienteAlterado.getFoneCelular());
+        cliente.setFoneFixo(clienteAlterado.getFoneFixo());
+        
+        cliente.setUltimaModificacaoPor(usuarioLogado);
 
-      //sem id: update
+        repository.save(cliente);
+         //sem id: update
      //com id:insert
-      repository.save(cliente);
-  }
+    }
+
+     
   
   //delete:
   //remoção lógica
