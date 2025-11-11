@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ifpe.oxefood.modelo.entregador.Entregador;
 import br.com.ifpe.oxefood.modelo.entregador.EntregadorService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 
@@ -31,20 +32,29 @@ public class EntregadorController {
 
    @Autowired //
    private EntregadorService entregadorService;
-
+  @Operation(
+       summary = "Serviço responsável por cadastrar um entregador no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
    @PostMapping
    public ResponseEntity<Entregador> save(@RequestBody @Valid EntregadorRequest request) {
 //RequestBody = o json vai vir no body da requisição
        Entregador entregador = entregadorService.save(request.build());
        return new ResponseEntity<Entregador>(entregador, HttpStatus.CREATED);
    }
-
+  @Operation(
+       summary = "Serviço responsável por listar um entregador no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
    //listagem
     @GetMapping 
     public List<Entregador> listarTodos() {
         return entregadorService.listarTodos();
     }
-
+@Operation(
+       summary = "Serviço responsável por listar um entregador por id no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
     @GetMapping("/{id}")
     public Entregador obterPorID(@PathVariable Long id) {
         return entregadorService.obterPorID(id);
@@ -52,6 +62,10 @@ public class EntregadorController {
 
 //update:
 //(rota de alterar) passa tbm um json com os dados do cliente alterado
+@Operation(
+       summary = "Serviço responsável por atualizar um entregador por id no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
 @PutMapping("/{id}")
  public ResponseEntity<Entregador> update(@PathVariable("id") Long id, @RequestBody @Valid EntregadorRequest request) {
 
@@ -62,6 +76,10 @@ public class EntregadorController {
 //pra ser invocado precisa fazer uma requisição tipo delete, passando o id na url
  //não vai retornar nenhum objeto(void)
  //pathvariable: tem q ser o mesmo do q está entre chaves
+ @Operation(
+       summary = "Serviço responsável por deletar um entregador no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
 @DeleteMapping("/{id}")
    public ResponseEntity<Void> delete(@PathVariable Long id) {
 

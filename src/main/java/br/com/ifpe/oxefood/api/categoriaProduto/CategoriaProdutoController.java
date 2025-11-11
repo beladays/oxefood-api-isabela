@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ifpe.oxefood.modelo.categoriaProduto.CategoriaProduto;
 import br.com.ifpe.oxefood.modelo.categoriaProduto.CategoriaProdutoService;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.List;
 
@@ -28,7 +29,10 @@ import java.util.List;
 public class CategoriaProdutoController {
      @Autowired //
    private CategoriaProdutoService categoriaProdutoService;
-
+  @Operation(
+       summary = "Serviço responsável por cadastrar uma categoria de produto no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
    @PostMapping
    public ResponseEntity<CategoriaProduto> save(@RequestBody CategoriaProdutoRequest request) {
 //RequestBody = o json vai vir no body da requisição
@@ -37,11 +41,18 @@ public class CategoriaProdutoController {
    }
    
 //listagem:
+  @Operation(
+       summary = "Serviço responsável por listar todas as categorias de produto no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
     @GetMapping 
     public List<CategoriaProduto> listarTodos() {
         return categoriaProdutoService.listarTodos();
     }
-
+  @Operation(
+       summary = "Serviço responsável por listar uma categoria de produto por id do cliente no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
     @GetMapping("/{id}")
     public CategoriaProduto obterPorID(@PathVariable Long id) {
         return categoriaProdutoService.obterPorID(id);
@@ -49,6 +60,10 @@ public class CategoriaProdutoController {
 
 //update:
 //(rota de alterar) passa tbm um json com os dados do cliente alterado
+  @Operation(
+       summary = "Serviço responsável por alterar uma categoria de produto por id no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
 @PutMapping("/{id}")
  public ResponseEntity<CategoriaProduto> update(@PathVariable("id") Long id, @RequestBody CategoriaProdutoRequest request) {
 
@@ -59,6 +74,11 @@ public class CategoriaProdutoController {
 //pra ser invocado precisa fazer uma requisição tipo delete, passando o id na url
  //não vai retornar nenhum objeto(void)
  //pathvariable: tem q ser o mesmo do q está entre chaves
+
+   @Operation(
+       summary = "Serviço responsável por deletar uma categoria de produto por id do cliente no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
 @DeleteMapping("/{id}")
    public ResponseEntity<Void> delete(@PathVariable Long id) {
 

@@ -19,6 +19,7 @@ import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.funcionario.Funcionario;
 import br.com.ifpe.oxefood.modelo.funcionario.FuncionarioService;
 import br.com.ifpe.oxefood.modelo.funcionario.TipoFuncionario;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -28,7 +29,10 @@ public class FuncionarioController {
 
     @Autowired
     private FuncionarioService funcionarioService;
-
+@Operation(
+       summary = "Serviço responsável por cadastrar um funcionário no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
     @PostMapping
     public ResponseEntity<Funcionario> save(@RequestBody @Valid FuncionarioRequest request) {
 
@@ -43,26 +47,39 @@ public class FuncionarioController {
         Funcionario funcionario = funcionarioService.save(funcionarioNovo);
         return new ResponseEntity<Funcionario>(funcionario, HttpStatus.CREATED);
     }
-
+@Operation(
+       summary = "Serviço responsável por listar todos os funcionários no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
     @GetMapping
     public List<Funcionario> listarTodos() {
 
         return funcionarioService.listarTodos();
     }
+@Operation(
+       summary = "Serviço responsável por listar um funcionário por id no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
 
     @GetMapping("/{id}")
     public Funcionario obterPorID(@PathVariable Long id) {
 
         return funcionarioService.obterPorID(id);
     }
-
+@Operation(
+       summary = "Serviço responsável por atualizar um funcionário por id no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
     @PutMapping("/{id}")
     public ResponseEntity<Funcionario> update(@PathVariable("id") Long id, @RequestBody FuncionarioRequest request) {
 
         funcionarioService.update(id, request.build());
         return ResponseEntity.ok().build();
     }
-
+@Operation(
+       summary = "Serviço responsável por deletar um funcionário por id no sistema.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
