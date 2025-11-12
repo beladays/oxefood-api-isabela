@@ -10,38 +10,46 @@ import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
 import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
+import br.com.ifpe.oxefood.modelo.mensagens.EmailService;
 import jakarta.transaction.Transactional;
 
 @Service
 public class ClienteService {
-   @Autowired
-   private UsuarioService usuarioService;
 
-   @Autowired
-   private PerfilRepository perfilUsuarioRepository;
+    @Autowired
+    private ClienteRepository repository;
 
+    @Autowired
+    private EnderecoClienteRepository enderecoClienteRepository;
 
-   @Autowired //injetar automaticamente uma dependencia no atributo se precisar
-   private ClienteRepository repository;
- 
-    @Autowired //injetar automaticamente uma dependencia no atributo se precisar
-   private EnderecoClienteRepository enderecoClienteRepository;
+    @Autowired
+    private UsuarioService usuarioService;
 
-   @Transactional //criar um bloco transacional, ou vai executar tudo ou não executa nada
-   public Cliente save(Cliente cliente, Usuario usuarioLogado) {
-    usuarioService.save(cliente.getUsuario());
+    @Autowired
+    private PerfilRepository perfilUsuarioRepository;
 
-      for (Perfil perfil : cliente.getUsuario().getRoles()) {
-           perfil.setHabilitado(Boolean.TRUE);
-           perfilUsuarioRepository.save(perfil);
-      }
+    @Autowired
+    private EmailService emailService;
 
-       cliente.setHabilitado(Boolean.TRUE);
-       cliente.setCriadoPor(usuarioLogado);
-       return repository.save(cliente); //cadastra no banco
-   }
- 
-//listagem controller:
+    @Transactional
+    public Cliente save(Cliente cliente, Usuario usuarioLogado) {
+
+        usuarioService.save(cliente.getUsuario());
+
+        for (Perfil perfil : cliente.getUsuario().getRoles()) {
+            perfil.setHabilitado(Boolean.TRUE);
+            perfilUsuarioRepository.save(perfil);
+        }
+
+        cliente.setHabilitado(Boolean.TRUE);
+        cliente.setCriadoPor(usuarioLogado);
+        Cliente c = repository.save(cliente);
+
+        emailService.enviarEmailConfirmacaoCadastroCliente(c);
+
+        return c;
+    }
+
     public List<Cliente> listarTodos() {
   
         return repository.findAll(); //SELECT * FROM Cliente
@@ -49,11 +57,10 @@ public class ClienteService {
 
     public Cliente obterPorID(Long id) {
 
-        return repository.findById(id).get(); //SELECT * FROM Ciente Where id = ? 
+        return repository.findById(id).get(); //SELECT * FROM Cliente WHERE id = ?
     }
-//update:
-//a partir do id q recebeu, consulta o cliente no banco e altera 
- @Transactional
+
+    @Transactional
     public void update(Long id, Cliente clienteAlterado, Usuario usuarioLogado) {
 
         Cliente cliente = repository.findById(id).get();
@@ -62,86 +69,71 @@ public class ClienteService {
         cliente.setCpf(clienteAlterado.getCpf());
         cliente.setFoneCelular(clienteAlterado.getFoneCelular());
         cliente.setFoneFixo(clienteAlterado.getFoneFixo());
-        
+            
         cliente.setUltimaModificacaoPor(usuarioLogado);
-
         repository.save(cliente);
-         //sem id: update
-     //com id:insert
     }
 
-     
-  
-  //delete:
-  //remoção lógica
-  //sethabilitado: pra ver se está vivo ou não 
-  //save = inclui(sem id) ou altera(com id)
-  @Transactional
-   public void delete(Long id) {
+    @Transactional
+    public void delete(Long id) {
 
-       Cliente cliente = repository.findById(id).get();
-       cliente.setHabilitado(Boolean.FALSE);
+        Cliente cliente = repository.findById(id).get();
+        cliente.setHabilitado(Boolean.FALSE);
 
-       repository.save(cliente);
-   }
+        repository.save(cliente);
+    }
 
+    @Transactional
+    public EnderecoCliente adicionarEnderecoCliente(Long clienteId, EnderecoCliente endereco) {
 
-//Endereço:
+        Cliente cliente = this.obterPorID(clienteId);
+        
+        //Primeiro salva o EnderecoCliente:
 
-//cadastrar endereço:
-@Transactional
-   public EnderecoCliente adicionarEnderecoCliente(Long clienteId, EnderecoCliente endereco) {
+        endereco.setCliente(cliente);
+        endereco.setHabilitado(Boolean.TRUE);
+        enderecoClienteRepository.save(endereco);
+        
+        //Depois acrescenta o endereço criado ao cliente e atualiza o cliente:
 
-       Cliente cliente = this.obterPorID(clienteId);
-      
-       //Primeiro salva o EnderecoCliente:
+        List<EnderecoCliente> listaEnderecoCliente = cliente.getEnderecos();
+        
+        if (listaEnderecoCliente == null) {
+            listaEnderecoCliente = new ArrayList<EnderecoCliente>();
+        }
+        
+        listaEnderecoCliente.add(endereco);
+        cliente.setEnderecos(listaEnderecoCliente);
+        repository.save(cliente);
+        
+        return endereco;
+    }
 
-       endereco.setCliente(cliente);
-       endereco.setHabilitado(Boolean.TRUE);
-       enderecoClienteRepository.save(endereco);
-      
-       //Depois acrescenta o endereço criado ao cliente e atualiza o cliente:
+    @Transactional
+    public EnderecoCliente atualizarEnderecoCliente(Long id, EnderecoCliente enderecoAlterado) {
 
-       List<EnderecoCliente> listaEnderecoCliente = cliente.getEnderecos();
-      
-       if (listaEnderecoCliente == null) {
-           listaEnderecoCliente = new ArrayList<EnderecoCliente>();
-       }
-      
-       listaEnderecoCliente.add(endereco);
-       cliente.setEnderecos(listaEnderecoCliente);
-       repository.save(cliente);
-      
-       return endereco;
-   }
- 
-//atualizar endereço:
-@Transactional
-   public EnderecoCliente atualizarEnderecoCliente(Long id, EnderecoCliente enderecoAlterado) {
+        EnderecoCliente endereco = enderecoClienteRepository.findById(id).get();
+        endereco.setRua(enderecoAlterado.getRua());
+        endereco.setNumero(enderecoAlterado.getNumero());
+        endereco.setBairro(enderecoAlterado.getBairro());
+        endereco.setCep(enderecoAlterado.getCep());
+        endereco.setCidade(enderecoAlterado.getCidade());
+        endereco.setEstado(enderecoAlterado.getEstado());
+        endereco.setComplemento(enderecoAlterado.getComplemento());
 
-       EnderecoCliente endereco = enderecoClienteRepository.findById(id).get();
-       endereco.setRua(enderecoAlterado.getRua());
-       endereco.setNumero(enderecoAlterado.getNumero());
-       endereco.setBairro(enderecoAlterado.getBairro());
-       endereco.setCep(enderecoAlterado.getCep());
-       endereco.setCidade(enderecoAlterado.getCidade());
-       endereco.setEstado(enderecoAlterado.getEstado());
-       endereco.setComplemento(enderecoAlterado.getComplemento());
+        return enderecoClienteRepository.save(endereco);
+    }
 
-       return enderecoClienteRepository.save(endereco);
-   }
-//remover endereço:
- @Transactional
-   public void removerEnderecoCliente(Long idEndereco) {
+    @Transactional
+    public void removerEnderecoCliente(Long idEndereco) {
 
-       EnderecoCliente endereco = enderecoClienteRepository.findById(idEndereco).get();
-       endereco.setHabilitado(Boolean.FALSE);
-       enderecoClienteRepository.save(endereco);
+        EnderecoCliente endereco = enderecoClienteRepository.findById(idEndereco).get();
+        endereco.setHabilitado(Boolean.FALSE);
+        enderecoClienteRepository.save(endereco);
 
-       Cliente cliente = this.obterPorID(endereco.getCliente().getId());
-       cliente.getEnderecos().remove(endereco);
-       repository.save(cliente);
-   }
-
+        Cliente cliente = this.obterPorID(endereco.getCliente().getId());
+        cliente.getEnderecos().remove(endereco);
+        repository.save(cliente);
+    }
     
 }

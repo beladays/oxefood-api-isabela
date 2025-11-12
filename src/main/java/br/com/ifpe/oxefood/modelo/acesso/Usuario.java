@@ -1,5 +1,4 @@
 //vai gerar a atabela usuario com os campos de login e senha
-
 package br.com.ifpe.oxefood.modelo.acesso;
 
 import java.util.ArrayList;
@@ -45,8 +44,8 @@ public class Usuario extends EntidadeNegocio implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<Perfil> roles = new ArrayList<>();
-// usuario vai poder ter mais de um perfil
-  @Override
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }

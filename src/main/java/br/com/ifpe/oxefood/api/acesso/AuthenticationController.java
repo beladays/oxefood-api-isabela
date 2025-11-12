@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
 import br.com.ifpe.oxefood.modelo.seguranca.JwtService;
-import io.swagger.v3.oas.annotations.Operation;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,17 +28,14 @@ public class AuthenticationController {
         this.jwtService = jwtService;
         this.usuarioService = usuarioService;
     }
-  @Operation(
-       summary = "Serviço responsável por autenticar no login um cliente no sistema",
-       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
-   )
+
     @PostMapping
     public Map<Object, Object> signin(@RequestBody AuthenticationRequest data) {
+    
         Usuario authenticatedUser = usuarioService.authenticate(data.getUsername(), data.getPassword());
 
-       
         String jwtToken = jwtService.generateToken(authenticatedUser);
-//oq retorna:
+
         Map<Object, Object> loginResponse = new HashMap<>();
         loginResponse.put("username", authenticatedUser.getUsername());
         loginResponse.put("token", jwtToken);

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.ifpe.oxefood.modelo.categoriaProduto.CategoriaProdutoService;
 import br.com.ifpe.oxefood.modelo.produto.Produto;
@@ -114,5 +115,17 @@ public class ProdutoController {
 
        return produtoService.filtrar(codigo, titulo, idCategoria);
    }
+
+//cadastrar imagem do produto
+@Operation(
+       summary = "Serviço responsável por salvar imagem dos produtos pelo id do produto.",
+       description = "Exemplo de descrição de um endpoint responsável por listar clientes no sistema."
+   )
+@PostMapping("/{id}")
+    public ResponseEntity<Produto> saveImage(@PathVariable Long id, @RequestParam(value = "imagem", required = true) MultipartFile imagem) {
+
+    Produto produto = produtoService.saveImage(id, imagem);
+    return new ResponseEntity<Produto>(produto, HttpStatus.CREATED);
+}
    
 }

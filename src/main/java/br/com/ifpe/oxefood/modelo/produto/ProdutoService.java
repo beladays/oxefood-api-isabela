@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import br.com.ifpe.oxefood.util.Util;
 import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
 
@@ -101,6 +103,22 @@ public class ProdutoService {
 
         return listaProdutos;
     }
+
+//salvar imagem 
+@Transactional
+public Produto saveImage(Long id, MultipartFile imagem) {
+
+Produto produto = obterPorID(id); //consulta o produto por id
+
+     String imagemUpada = Util.fazerUploadImagem(imagem); //chama o metodo fazer upload img
+
+     if (imagemUpada != null) {
+     	produto.setImagem(imagemUpada);
+     }
+
+     return save(produto);
+}
+
 
 }
 
